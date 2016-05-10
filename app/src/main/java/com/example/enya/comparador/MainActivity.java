@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OneFragment(), "Comparar precios");
         adapter.addFragment(new TwoFragment(), "Comparaciones guardadas");
+        adapter.notifyDataSetChanged();
         viewPager.setAdapter(adapter);
     }
 

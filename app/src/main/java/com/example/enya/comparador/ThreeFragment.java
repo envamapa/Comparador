@@ -2,7 +2,6 @@ package com.example.enya.comparador;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -67,25 +66,18 @@ public class ThreeFragment extends Fragment{
                              final Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_three, container, false);
 
-        regresar = (Button) view.findViewById(R.id.regresar);
-        regresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        resultado = (ListView)view.findViewById(R.id.resultados2);
 
-            }
-        });
+        tvFecha = (TextView)view.findViewById(R.id.Fecha);
+        tvNombre = (TextView)view.findViewById(R.id.NombreProducto2);
 
-        resultado = (ListView)view.findViewById(R.id.resultados);
-
-        tvFecha = (TextView)view.findViewById(R.id.tvFecha);
-        tvNombre = (TextView)view.findViewById(R.id.NombreProducto);
-
-        verificar = (Button)view.findViewById(R.id.verificar);
-        guardar = (Button)view.findViewById(R.id.guardar);
+        verificar = (Button)view.findViewById(R.id.verificar2);
+        guardar = (Button)view.findViewById(R.id.guardar2);
 
         Bundle bundle = getArguments();
         final Producto p = new Producto();
         p.setUpc(bundle.getString("upc"));
+        p.setFecha(bundle.getString("fecha"));
 
         tvNombre.setText(p.getUpc());
 
@@ -96,10 +88,14 @@ public class ThreeFragment extends Fragment{
 
         resultado.setAdapter(adaptadorProductos);
 
+        guardar.setVisibility(View.INVISIBLE);
+
         verificar.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+                verificar.setVisibility(View.INVISIBLE);
 
                 final ArrayList<Producto> productos = new ArrayList<>();
 
@@ -139,13 +135,6 @@ public class ThreeFragment extends Fragment{
                                             .setPositiveButton("Aceptar", null);
                                     dialogBuilder.show();
 
-                                    /*tvNombre.setVisibility(View.INVISIBLE);
-                                    guardar.setVisibility(View.INVISIBLE);
-                                    resultado.setVisibility(View.INVISIBLE);
-                                    comparaciones.setVisibility(View.VISIBLE);
-                                    tvFecha.setVisibility(View.INVISIBLE);
-                                    verificar.setVisibility(View.INVISIBLE);*/
-
                                 } else {
                                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                                     dialogBuilder.setMessage("La comparación del producto no ha sido guardada")
@@ -159,39 +148,16 @@ public class ThreeFragment extends Fragment{
                     }
                 });
 
+                guardar.setVisibility(View.VISIBLE);
+
             }
 
         });
 
+
+        System.out.println("Hola 3");
+
         return view;
-    }
-
-    private ArrayList<Producto> selectAllUpc(){
-        try{
-            baseDatos = getActivity().openOrCreateDatabase(nombreBD, android.content.Context.MODE_PRIVATE, null);
-            baseDatos.execSQL(crearTabla);
-        }
-        catch (Exception e){
-            Log.i(TAG, "Error al abrir o crear la base de datos" + e);
-        }
-
-        ArrayList<Producto> productos = new ArrayList();
-
-        Cursor c = baseDatos.rawQuery("SELECT distinct upc, fecha FROM comparacion", null);
-
-        if (c.moveToFirst()) {
-            do {
-                Producto p = new Producto();
-                p.setUpc(c.getString(0));
-                p.setFecha(c.getString(1));
-                Cursor c1 = baseDatos.rawQuery("select descripcion from comparacion where upc="+p.getUpc()+" and fecha='"+p.getFecha()+"'", null);
-                c1.moveToLast();
-                p.setDescription(c1.getString(0));
-                productos.add(p);
-            } while(c.moveToNext());
-        }
-
-        return productos;
     }
 
     private ArrayList<Producto> selectAll(String upc, String fecha){
@@ -205,7 +171,7 @@ public class ThreeFragment extends Fragment{
 
         ArrayList<Producto> productos = new ArrayList();
 
-        System.out.print(fecha);
+        System.out.print("fehca"+fecha);
 
         Cursor c = baseDatos.rawQuery("SELECT * FROM comparacion where upc="+upc+" and fecha='"+fecha+"'", null);
 
@@ -231,7 +197,7 @@ public class ThreeFragment extends Fragment{
             baseDatos.execSQL(crearTabla);
             ContentValues values = new ContentValues();
             Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
             String fecha = sdf.format(c.getTime());
             for(int i=0; i<productos.size(); i++){
                 Producto p = productos.get(i);
@@ -248,27 +214,6 @@ public class ThreeFragment extends Fragment{
             Log.i(TAG, "Error al abrir o crear la base de datos" + e);
             return false;
         }
-    }
-
-    private void confirmDialog(final String upc, final String fecha) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-
-        builder
-                .setMessage("¿Seguro que desea eliminar esta comparación?")
-                .setPositiveButton("Aceptar",  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String[] args = {upc, fecha};
-                        baseDatos.delete(nombreTabla,"upc=? and fecha=?",args);
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int id) {
-                        dialog.cancel();
-                    }
-                })
-                .show();
     }
 
     @Override

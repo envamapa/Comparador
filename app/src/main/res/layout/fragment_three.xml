@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.enya.comparadortab.ThreeFragment">
+    tools:context="com.example.enya.comparador.ThreeFragment"
+    android:background="@color/windowBackground">
 
     <TextView
         android:layout_margin="5dp"
@@ -9,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Comparación realizada el día "
-        android:id="@+id/tvFecha"
+        android:id="@+id/Fecha"
         android:textSize="15sp"
         android:gravity="center_horizontal"
         android:layout_alignParentTop="true"
@@ -20,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/txtBoton"
-        android:id="@+id/verificar"
-        android:layout_below="@+id/tvFecha"
+        android:id="@+id/verificar2"
+        android:layout_below="@+id/Fecha"
         android:textColor="#FFF"
         android:background="@drawable/boton"
         android:layout_alignParentLeft="true"
@@ -31,13 +33,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/txtGuardar"
-        android:id="@+id/guardar"
+        android:id="@+id/guardar2"
         android:textColor="#FFF"
         android:background="@drawable/boton"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_alignTop="@+id/verificar"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignTop="@+id/verificar2"
+        android:layout_alignEnd="@+id/NombreProducto2" />
 
     <TextView
         android:layout_margin="5dp"
@@ -45,27 +47,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nombre del Producto"
-        android:id="@+id/NombreProducto"
+        android:id="@+id/NombreProducto2"
         android:textSize="20sp"
-        android:layout_below="@+id/guardar"/>
+        android:layout_below="@+id/guardar2"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/resultados"
-        android:layout_below="@+id/NombreProducto"
-        android:layout_alignStart="@+id/NombreProducto" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/regresar"
-        android:id="@+id/regresar"
-        android:textColor="#FFF"
-        android:background="@drawable/boton"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_alignBottom="@+id/guardar"
-        android:layout_alignEnd="@+id/NombreProducto" />
+        android:id="@+id/resultados2"
+        android:layout_below="@+id/NombreProducto2"
+        android:layout_alignStart="@+id/NombreProducto2" />
 
 </RelativeLayout>

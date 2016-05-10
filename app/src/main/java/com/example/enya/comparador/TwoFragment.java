@@ -82,11 +82,29 @@ public class TwoFragment extends Fragment{
 
                         Bundle args = new Bundle();
                         args.putString("upc", p.getUpc());
+                        args.putString("fecha", p.getFecha());
                         Fragment myFrag = new ThreeFragment();
                         myFrag.setArguments(args);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.fragment_two, myFrag).addToBackStack(null).commit();
 
+                        FragmentTransaction trans = getFragmentManager()
+                                .beginTransaction();
+
+                        trans.replace(R.id.fragment_two, myFrag);
+
+                        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        trans.addToBackStack(null);
+
+                        trans.commit();
+
+                    }
+                });
+
+                comparaciones.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        final Producto p = guardados.get(position);
+                        confirmDialog(p.getUpc(), p.getFecha());
+                        return true;
                     }
                 });
 
@@ -94,7 +112,7 @@ public class TwoFragment extends Fragment{
             }
         });
 
-        comparaciones = (ListView)view.findViewById(R.id.comparaciones);
+        comparaciones = (ListView) view.findViewById(R.id.comparaciones);
 
         final ArrayList<Producto> guardados = selectAllUpc();
 
@@ -117,10 +135,19 @@ public class TwoFragment extends Fragment{
 
                 Bundle args = new Bundle();
                 args.putString("upc", p.getUpc());
+                args.putString("fecha", p.getFecha());
                 Fragment myFrag = new ThreeFragment();
                 myFrag.setArguments(args);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_two, myFrag).hide(TwoFragment.this).addToBackStack(null).commit();
+
+                FragmentTransaction trans = getFragmentManager()
+                        .beginTransaction();
+
+                trans.replace(R.id.fragment_two, myFrag);
+
+                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                trans.addToBackStack(null);
+
+                trans.commit();
 
             }
         });
@@ -155,61 +182,6 @@ public class TwoFragment extends Fragment{
         return productos;
     }
 
-    private ArrayList<Producto> selectAll(String upc, String fecha){
-        try{
-            baseDatos = getActivity().openOrCreateDatabase(nombreBD, android.content.Context.MODE_PRIVATE, null);
-            baseDatos.execSQL(crearTabla);
-        }
-        catch (Exception e){
-            Log.i(TAG, "Error al abrir o crear la base de datos" + e);
-        }
-
-        ArrayList<Producto> productos = new ArrayList();
-
-        System.out.print(fecha);
-
-        Cursor c = baseDatos.rawQuery("SELECT * FROM comparacion where upc="+upc+" and fecha='"+fecha+"'", null);
-
-        if (c.moveToFirst()) {
-            do {
-                Producto p = new Producto();
-                p.setUpc(c.getString(1));
-                p.setPrecio(BigDecimal.valueOf(c.getFloat(2)));
-                p.setDescription(c.getString(3));
-                p.setRetailer(c.getString(4));
-                p.setFecha(c.getString(5));
-                productos.add(p);
-            } while(c.moveToNext());
-        }
-
-        return productos;
-    }
-
-    private boolean insertar(ArrayList<Producto> productos)
-    {
-        try{
-            baseDatos = getActivity().openOrCreateDatabase(nombreBD, android.content.Context.MODE_PRIVATE, null);
-            baseDatos.execSQL(crearTabla);
-            ContentValues values = new ContentValues();
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            String fecha = sdf.format(c.getTime());
-            for(int i=0; i<productos.size(); i++){
-                Producto p = productos.get(i);
-                values.put("upc",p.getUpc());
-                values.put("precio",p.getPrecio().toString());
-                values.put("descripcion",p.getDescription());
-                values.put("retailer", p.getRetailer());
-                values.put("fecha",fecha);
-                baseDatos.insert(nombreTabla, null, values);
-            }
-            return true;
-        }
-        catch (Exception e) {
-            Log.i(TAG, "Error al abrir o crear la base de datos" + e);
-            return false;
-        }
-    }
 
     private void confirmDialog(final String upc, final String fecha) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
