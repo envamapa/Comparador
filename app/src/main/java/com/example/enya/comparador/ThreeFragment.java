@@ -49,7 +49,7 @@ public class ThreeFragment extends Fragment{
 
     private static final String crearTabla = "create table if not exists "
             + " comparacion (idComparacion integer primary key autoincrement, "
-            + " upc varchar(10) not null, precio float not null, descripcion text not null, retailer text not null,"
+            + " upc text not null, precio float not null, descripcion text not null, retailer text not null,"
             + " fecha text not null);";
 
     public ThreeFragment() {

@@ -8,7 +8,7 @@
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
+        android:id="@+id/escanear"
         android:contentDescription="@string/txtCodigo"
         android:src="@drawable/photocamera"
         android:background="@drawable/boton"

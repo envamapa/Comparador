@@ -1,20 +1,24 @@
 package com.example.enya.comparador;
 
+import android.annotation.TargetApi;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity
+    implements OnViewSelected{
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -26,16 +30,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String crearTabla = "create table if not exists "
             + " comparacion (idComparacion integer primary key autoincrement, "
-            + " upc varchar(10) not null, precio float not null, descripcion text not null, retailer text not null,"
+            + " upc text not null, precio float not null, descripcion text not null, retailer text not null,"
             + " fecha text not null);";
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -88,4 +93,9 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+    public void onViewSelected(int data) {
+        Log.d("", "data : " + data); // this value will be 456.
+    }
+
 }

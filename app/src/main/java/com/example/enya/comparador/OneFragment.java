@@ -2,7 +2,9 @@ package com.example.enya.comparador;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,19 +13,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 
 public class OneFragment extends Fragment{
 
     Button verificar;
     Button guardar;
+
+    ImageButton escanear;
 
     TextView nombre;
 
@@ -45,7 +54,7 @@ public class OneFragment extends Fragment{
 
     private static final String crearTabla = "create table if not exists "
             + " comparacion (idComparacion integer primary key autoincrement, "
-            + " upc varchar(10) not null, precio float not null, descripcion text not null, retailer text not null,"
+            + " upc text not null, precio float not null, descripcion text not null, retailer text not null,"
             + " fecha text not null);";
 
     public OneFragment() {
@@ -73,6 +82,15 @@ public class OneFragment extends Fragment{
         resultados.setVisibility(View.INVISIBLE);
 
         codigo = (EditText)view.findViewById(R.id.codigo);
+
+        escanear = (ImageButton)view.findViewById(R.id.escanear);
+        escanear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
+                scanIntegrator.initiateScan();
+            }
+        });
 
         verificar = (Button)view.findViewById(R.id.verificar);
         verificar.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +161,20 @@ public class OneFragment extends Fragment{
 
         return view;
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null) {
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+            codigo.setText(scanContent);
+        }else{
+            Toast toast = Toast.makeText(getActivity(),
+                    "No se pudo realizar el escaneo", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     //Método que realiza la inserción de los datos en nuestra tabla contacto

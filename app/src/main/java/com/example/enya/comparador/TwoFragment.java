@@ -1,5 +1,6 @@
 package com.example.enya.comparador;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -40,8 +41,10 @@ public class TwoFragment extends Fragment{
 
     private static final String crearTabla = "create table if not exists "
             + " comparacion (idComparacion integer primary key autoincrement, "
-            + " upc varchar(10) not null, precio float not null, descripcion text not null, retailer text not null,"
+            + " upc text not null, precio float not null, descripcion text not null, retailer text not null,"
             + " fecha text not null);";
+
+    OnViewSelected _mClickListener;
 
     public TwoFragment() {
         // Required empty public constructor
@@ -146,6 +149,13 @@ public class TwoFragment extends Fragment{
 
             }
         });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mClickListener.onViewSelected(456);
+            }
+        });
         return view;
     }
 
@@ -167,7 +177,8 @@ public class TwoFragment extends Fragment{
                 Producto p = new Producto();
                 p.setUpc(c.getString(0));
                 p.setFecha(c.getString(1));
-                Cursor c1 = baseDatos.rawQuery("select descripcion from comparacion where upc="+p.getUpc(), null);
+                System.out.println(p.getUpc());
+                Cursor c1 = baseDatos.rawQuery("select descripcion from comparacion where upc='"+c.getString(0)+"'", null);
                 c1.moveToLast();
                 p.setDescription(c1.getString(0));
                 productos.add(p);
@@ -200,7 +211,43 @@ public class TwoFragment extends Fragment{
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            _mClickListener = (OnViewSelected) activity;
+            System.out.println("Attach");
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onViewSelected");
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        System.out.println("View Created");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        System.out.println("Detach");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("Destroy");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        System.out.println("Resume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        System.out.println("Pause");
     }
 }
