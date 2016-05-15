@@ -1,6 +1,7 @@
 package com.example.enya.comparador;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 import android.widget.Toolbar;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +101,20 @@ public class MainActivity extends FragmentActivity
 
     public void onViewSelected(int data) {
         Log.d("", "data : " + data); // this value will be 456.
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null) {
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+            System.out.println(scanContent);
+        }else{
+            Toast toast = Toast.makeText(this,
+                    "No se pudo realizar el escaneo", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
 }
