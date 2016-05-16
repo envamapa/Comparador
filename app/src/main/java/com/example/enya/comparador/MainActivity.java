@@ -10,14 +10,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +112,10 @@ public class MainActivity extends FragmentActivity
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null) {
             String scanContent = scanningResult.getContents();
-            String scanFormat = scanningResult.getFormatName();
-            System.out.println(scanContent);
+
+            TextView upc = (TextView)findViewById(R.id.codigo);
+            upc.setText(scanContent.substring(0, scanContent.length() - 1));
+
         }else{
             Toast toast = Toast.makeText(this,
                     "No se pudo realizar el escaneo", Toast.LENGTH_SHORT);

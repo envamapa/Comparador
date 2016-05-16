@@ -163,20 +163,6 @@ public class OneFragment extends Fragment{
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scanningResult != null) {
-            String scanContent = scanningResult.getContents();
-            String scanFormat = scanningResult.getFormatName();
-            codigo.setText(scanContent);
-        }else{
-            Toast toast = Toast.makeText(getActivity(),
-                    "No se pudo realizar el escaneo", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-
     //Método que realiza la inserción de los datos en nuestra tabla contacto
     private boolean insertar(ArrayList<Producto> productos)
     {
