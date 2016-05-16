@@ -114,6 +114,7 @@ public class MainActivity extends FragmentActivity
             String scanContent = scanningResult.getContents();
 
             TextView upc = (TextView)findViewById(R.id.codigo);
+            upc.setText("");
             upc.setText(scanContent.substring(0, scanContent.length() - 1));
 
         }else{

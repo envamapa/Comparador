@@ -25,7 +25,7 @@ public class WSObtenerDatos {
 
     //ConexionServerPHP conexionIniciarSesion;
     ProgressDialog progressDialog;
-    public static final int CONNECTION_TIMEOUT =  60 * 1000;
+    public static final int CONNECTION_TIMEOUT =  6000 * 1000;
     public static final String SERVER_ADDRESS = "http://checkprices-spirit1.rhcloud.com/";
     public String nombreServicio = "";
     Context context;
